@@ -1145,11 +1145,31 @@
 
 
     document.getElementById('share-btn').addEventListener('click', () => {
-      const username = document.getElementById('hud-username-txt').textContent;
-      const tier = document.getElementById('badge-number').textContent;
-      const shareText = `Built my @arc Architect Card! 🛠️\n\nTier: Architect ${tier}\nHandle: @${username}\n\nBuild yours here:`;
-      const shareUrl = "https://x.com/arc";
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+      const tier      = document.getElementById('badge-number').textContent.trim();
+      const activeBtn = document.querySelector('.level-select-btn.active');
+      const lvl       = activeBtn ? parseInt(activeBtn.getAttribute('data-level')) : 1;
+      const title     = roles[lvl] ? roles[lvl].name : 'Arc Initiate';
+
+      // Extract serial from label e.g. "ID // AC - 007" → "AC - 007"
+      const serialLabel = document.getElementById('card-serial-label');
+      const serialMatch = serialLabel ? serialLabel.textContent.match(/AC - (\S+)/) : null;
+      const serial      = serialMatch ? `AC - ${serialMatch[1]}` : 'AC - ???';
+
+      const shareText =
+`Just built my @arc Architect Card!
+
+• Tier: Architect ${tier}
+
+• Title: ${title}
+
+• ID: ${serial}
+
+Get your Architect Card here: https://architect-card.vercel.app/`;
+
+      window.open(
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
+        '_blank'
+      );
     });
   </script>
 </body>
