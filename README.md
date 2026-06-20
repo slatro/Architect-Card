@@ -1,38 +1,62 @@
-# Base Bridge Quest - Deployment Guide
+# 🧾 Arc Architect Card
 
-This repository contains the smart contract and frontend code for a Web3 arcade game designed for Base Mainnet and Base Sepolia. The game features an onchain leaderboard, an offchain points economy, and a refer-to-earn viral loop.
+> Your on-chain identity, forged in steel.
 
-## Smart Contract Deployment
+A sci-fi developer ID card generator for the [Arc Network](https://x.com/arc) community. Enter your X username, pick your Architect tier, and download a high-res PNG card stamped with your unique serial number.
 
-The core smart contract logic is encapsulated in `contracts/LeaderboardReferral.sol`.
+**Live:** [architect-card.vercel.app](https://architect-card.vercel.app/)
 
-1. Use [Remix IDE](https://remix.ethereum.org/) or a local Hardhat/Foundry setup.
-2. Compile `LeaderboardReferral.sol` with Solidity ^0.8.20.
-3. Add the Base Sepolia network to your wallet:
-   - Network Name: Base Sepolia
-   - RPC URL: `https://sepolia.base.org`
-   - Chain ID: `84532`
-   - Currency: `ETH`
-4. Deploy the compiled contract to **Base Sepolia**.
-5. Copy the deployed contract address.
-6. Open `js/web3.js` and update the `CONTRACT_ADDRESS` constant (line 2) with your newly deployed address.
-7. The ABI is pre-configured in `js/web3.js`. If you modified the contract, remember to update the `CONTRACT_ABI` array.
+---
 
-## Frontend Deployment
+## Features
 
-The frontend is a purely static site built with HTML, CSS, and vanilla JS, meaning it can be hosted on any static hosting provider.
+- 🪪 **Auto-syncs your X profile picture** via username input
+- 🏆 **5 Architect tiers** — each with a distinct metallic theme
+  - `I` Bronze · `II` Iron · `III` Silver · `IV` Gilded · `V` Gold
+- 🔢 **Unique serial number per card** — globally shared counter (AC-001, AC-002…)
+- 🎨 **CRT scanline & noise overlay** — retro-neon sci-fi aesthetic
+- 📥 **Export as high-res PNG** (3× pixel ratio)
+- 🐦 **One-click Share to X** with pre-filled tweet
 
-1. Create a GitHub repository and push these files (`index.html`, `css/`, `js/`, `contracts/`).
-2. Go to [Vercel](https://vercel.com/) (or Netlify/GitHub Pages).
-3. Import your repository and deploy. No build commands are required.
-4. Once deployed, players can connect their wallets, switch to Base Sepolia, and play the game directly.
+---
 
-## Web3 Features
+## Tiers
 
-- **Wallet Connection:** Native integration using `ethers.js` via `window.ethereum` detection (MetaMask, Coinbase Wallet).
-- **Network Switch:** Prompts the user to automatically switch to Base Sepolia (or adds it to their wallet if missing).
-- **Refer-to-Earn:** Users can copy their referral link (e.g., `?ref=0xYourWalletAddress`). When new users submit a score while holding that referral, the referrer earns onchain points and referral counts tracking on the smart contract.
-- **Gas-Efficient Leaderboard:** To save gas, scores are stored as `bestScore` per address, and `ScoreSubmitted` events are emitted on updates. The global leaderboard can be built efficiently offchain using indexers like The Graph or Goldsky.
-# Base-Bridge
-# Base-Bridge
-# Architect-Card
+| # | Label | Theme |
+|---|-------|-------|
+| Architect I | Arc Initiate | Bronze |
+| Architect II | Arc Specialist | Iron |
+| Architect III | Arc Master | Silver |
+| Architect IV | Arc Commander | Gilded |
+| Architect V | Arc Legend | Gold |
+
+---
+
+## Tech Stack
+
+- Vanilla HTML / CSS / JavaScript
+- [`html-to-image`](https://github.com/bubkoo/html-to-image) for PNG export
+- [`counterapi.dev`](https://counterapi.dev) for shared serial numbering
+- [`unavatar.io`](https://unavatar.io) + `images.weserv.nl` proxy for X avatars
+
+---
+
+## Local Development
+
+No build step required — just open the file:
+
+```bash
+git clone https://github.com/slatro/Architect-Card.git
+cd Architect-Card
+open arc_preview.html
+```
+
+---
+
+## Deploy
+
+Deployable to any static host (Vercel, Netlify, GitHub Pages). The project is a single `arc_preview.html` file with no dependencies to install.
+
+---
+
+Built with 🖤 for the Arc community.
