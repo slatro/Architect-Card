@@ -35,3 +35,4 @@ The frontend is a purely static site built with HTML, CSS, and vanilla JS, meani
 - **Gas-Efficient Leaderboard:** To save gas, scores are stored as `bestScore` per address, and `ScoreSubmitted` events are emitted on updates. The global leaderboard can be built efficiently offchain using indexers like The Graph or Goldsky.
 # Base-Bridge
 # Base-Bridge
+# Architect-Card
