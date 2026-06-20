@@ -1,0 +1,27 @@
+{
+  "name": "stick-bridge-game",
+  "version": "1.0.0",
+  "description": "This repository contains the smart contract and frontend code for a Web3 arcade game designed for Base Mainnet and Base Sepolia. The game features an onchain leaderboard, an offchain points economy, and a refer-to-earn viral loop.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slatro/Base-Bridge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/slatro/Base-Bridge/issues"
+  },
+  "homepage": "https://github.com/slatro/Base-Bridge#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "dotenv": "^17.4.2",
+    "ethers": "^6.17.0",
+    "solc": "^0.8.20"
+  }
+}
