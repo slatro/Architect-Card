@@ -68,10 +68,38 @@
     .subtitle {
       color: #475569;
       font-size: 0.9rem;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
       font-family: 'Share Tech Mono', monospace;
       letter-spacing: 2px;
       font-weight: 600;
+    }
+
+    /* Team badge on card */
+    .hud-team-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 5px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.9;
+    }
+    .hud-team-badge::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      flex-shrink: 0;
+      -webkit-text-fill-color: initial;
     }
 
     /* Premium Input Section */
@@ -833,6 +861,11 @@
     <input type="text" id="twitter-username" placeholder="samconnerone" value="samconnerone">
     <button class="input-fetch-btn" id="fetch-btn">↵ Load</button>
   </div>
+  <div class="input-section" style="margin-bottom:30px;">
+    <label for="team-input">Team</label>
+    <div class="input-divider"></div>
+    <input type="text" id="team-input" placeholder="e.g. Echo | Circle" value="Echo | Circle">
+  </div>
 
   <div class="cards-container">
     
@@ -886,6 +919,7 @@
             <div class="hud-titles">
               <div class="hud-class-label">Architect</div>
               <div class="hud-username"><span id="hud-username-txt">samconnerone</span></div>
+              <div class="hud-team-badge" id="hud-team-badge">Echo | Circle</div>
             </div>
           </div>
 
@@ -1011,7 +1045,7 @@
       currentAvatarUsername = username;
       
       const avatarImg = document.getElementById('hud-avatar');
-      const proxyUrl = `https://images.weserv.nl/?url=https://unavatar.io/twitter/${encodeURIComponent(username)}`;
+      const proxyUrl = `https://images.weserv.nl/?url=https://unavatar.io/x/${encodeURIComponent(username)}&w=200&h=200`;
       
       const img = new Image();
       img.crossOrigin = 'Anonymous';
@@ -1050,6 +1084,15 @@
       fetchBtn.addEventListener('click', () => {
         const username = twitterInput.value.trim() || 'avatar';
         updateAvatar(username);
+      });
+    }
+
+    // Team input — updates card badge in real time
+    const teamInput = document.getElementById('team-input');
+    const teamBadge = document.getElementById('hud-team-badge');
+    if (teamInput && teamBadge) {
+      teamInput.addEventListener('input', () => {
+        teamBadge.textContent = teamInput.value.trim() || '';
       });
     }
 
