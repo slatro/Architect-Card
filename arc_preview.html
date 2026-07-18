@@ -219,6 +219,11 @@
       --theme-primary: #eab308;
       --theme-glow-color: 234, 179, 8;
     }
+    /* Team theme — purple/blue gradient */
+    .card-wrapper.level-team {
+      --theme-primary: #a78bfa;
+      --theme-glow-color: 139, 92, 246;
+    }
 
     /* Level specific themes defined directly on the card to survive html-to-image cloning */
     .sci-fi-card {
@@ -266,6 +271,16 @@
     }
     .sci-fi-card.level-5 .hud-badge-logo-img {
       filter: sepia(1) saturate(3) brightness(1.0) contrast(1.1) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8)); /* Gold filter */
+    }
+
+    /* Team theme — purple/blue gradient */
+    .sci-fi-card.level-team {
+      --theme-primary: #a78bfa;
+      --theme-glow-color: 139, 92, 246;
+      --theme-bezel: linear-gradient(135deg, #c4b5fd 0%, #7c3aed 40%, #1e1b4b 70%, #a78bfa 100%);
+    }
+    .sci-fi-card.level-team .hud-badge-logo-img {
+      filter: hue-rotate(200deg) saturate(2) brightness(1.1) drop-shadow(0 2px 6px rgba(0,0,0,0.8));
     }
 
     .sci-fi-card {
@@ -861,11 +876,6 @@
     <input type="text" id="twitter-username" placeholder="samconnerone" value="samconnerone">
     <button class="input-fetch-btn" id="fetch-btn">↵ Load</button>
   </div>
-  <div class="input-section" style="margin-bottom:30px;">
-    <label for="team-input">Team</label>
-    <div class="input-divider"></div>
-    <input type="text" id="team-input" placeholder="e.g. Echo | Circle" value="Echo | Circle">
-  </div>
 
   <div class="cards-container">
     
@@ -966,6 +976,8 @@
         <button class="level-select-btn" data-level="3">Architect III</button>
         <button class="level-select-btn" data-level="4">Architect IV</button>
         <button class="level-select-btn" data-level="5">Architect V</button>
+        <div style="width:1px;background:rgba(255,255,255,0.12);margin:4px 4px;"></div>
+        <button class="level-select-btn" data-level="team" id="team-level-btn" style="background:linear-gradient(135deg,rgba(167,139,250,0.18) 0%,rgba(96,165,250,0.08) 100%);color:rgba(167,139,250,0.8);">Echo | Circle</button>
       </div>
 
       <!-- Action Buttons Row -->
@@ -1043,33 +1055,20 @@
     function updateAvatar(username) {
       hudUsernameTxt.textContent = username;
       currentAvatarUsername = username;
-      
       const avatarImg = document.getElementById('hud-avatar');
-      const proxyUrl = `https://images.weserv.nl/?url=https://unavatar.io/x/${encodeURIComponent(username)}&w=200&h=200`;
-      
-      const img = new Image();
-      img.crossOrigin = 'Anonymous';
-      img.onload = function() {
-        if (currentAvatarUsername !== username) return;
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = img.naturalWidth;
-        tempCanvas.height = img.naturalHeight;
-        const ctx = tempCanvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        try {
-          avatarImg.src = tempCanvas.toDataURL('image/png');
-        } catch (e) {
-          console.error("Canvas toDataURL failed:", e);
-          avatarImg.src = proxyUrl;
-        }
-      };
-      img.onerror = function() {
-        console.error("Failed to load avatar image via proxy");
-        if (currentAvatarUsername === username) {
-          avatarImg.src = `https://unavatar.io/twitter/${username}`;
-        }
-      };
-      img.src = proxyUrl;
+      // Try multiple sources with fallbacks
+      const sources = [
+        `https://images.weserv.nl/?url=unavatar.io/x/${encodeURIComponent(username)}&w=200&h=200`,
+        `https://unavatar.io/x/${encodeURIComponent(username)}`,
+        `https://unavatar.io/twitter/${encodeURIComponent(username)}`,
+      ];
+      let idx = 0;
+      function tryNext() {
+        if (idx >= sources.length) return;
+        avatarImg.onerror = function() { idx++; tryNext(); };
+        avatarImg.src = sources[idx];
+      }
+      tryNext();
     }
 
     twitterInput.addEventListener('keydown', (e) => {
@@ -1115,24 +1114,30 @@
          document.querySelectorAll('.level-select-btn').forEach(b => b.classList.remove('active'));
          btn.classList.add('active');
 
-         const lvl = parseInt(btn.getAttribute('data-level'));
-
-         document.getElementById('badge-number').textContent = lvl;
-         document.getElementById('code-level-num').textContent = lvl;
-         document.getElementById('code-role-str').textContent = `"${roles[lvl].name}"`;
-
-         // Update sci-fi-card classes to update theme colors/gradients/borders
+         const lvl = btn.getAttribute('data-level');
          const card = document.querySelector(".sci-fi-card");
-         card.className = "sci-fi-card"; // Reset
-         card.classList.add(`level-${lvl}`);
-
-         // Update card-wrapper classes to style level select buttons outside card
          const wrapper = document.querySelector(".card-wrapper");
-         wrapper.className = "card-wrapper";
-         wrapper.classList.add(`level-${lvl}`);
-         
-         // Update CRT Noise and Scanlines dynamically
-         updateCRTStyle(lvl);
+
+         if (lvl === 'team') {
+           // Team mode — purple/blue gradient
+           card.className = "sci-fi-card level-team";
+           wrapper.className = "card-wrapper level-team";
+           document.getElementById('badge-number').textContent = '★';
+           document.getElementById('code-level-num').textContent = '"team"';
+           const teamName = document.getElementById('team-level-btn')?.textContent || 'Team';
+           document.getElementById('code-role-str').textContent = `"${teamName}"`;
+           updateCRTStyle(5); // Use gold CRT as base, purple comes from CSS
+         } else {
+           const lvlNum = parseInt(lvl);
+           document.getElementById('badge-number').textContent = lvlNum;
+           document.getElementById('code-level-num').textContent = lvlNum;
+           document.getElementById('code-role-str').textContent = `"${roles[lvlNum].name}"`;
+           card.className = "sci-fi-card";
+           card.classList.add(`level-${lvlNum}`);
+           wrapper.className = "card-wrapper";
+           wrapper.classList.add(`level-${lvlNum}`);
+           updateCRTStyle(lvlNum);
+         }
        });
     });
 
@@ -1215,6 +1220,23 @@ Get your Architect Card here: https://architect-card.vercel.app/`;
         '_blank'
       );
     });
+
+    // Team input — updates the team button label and card badge in real time
+    const teamInputEl = document.getElementById('team-input');
+    const teamLevelBtn = document.getElementById('team-level-btn');
+    const teamBadgeEl = document.getElementById('hud-team-badge');
+    if (teamInputEl && teamLevelBtn) {
+      teamInputEl.addEventListener('input', () => {
+        const val = teamInputEl.value.trim() || 'Team';
+        teamLevelBtn.textContent = val;
+        if (teamBadgeEl) teamBadgeEl.textContent = val;
+        // If team mode is active, update code display too
+        if (document.querySelector('.level-select-btn.active')?.getAttribute('data-level') === 'team') {
+          document.getElementById('code-role-str').textContent = `"${val}"`;
+        }
+      });
+    }
+
   </script>
 </body>
 </html>
