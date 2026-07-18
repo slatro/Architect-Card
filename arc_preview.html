@@ -91,7 +91,13 @@
       background-clip: text;
       opacity: 0.9;
     }
-    .hud-team-badge::before {
+    .hud-team-badge:empty::before {
+      display: none;
+    }
+    .hud-team-badge:empty {
+      display: none;
+    }
+
       content: '';
       display: inline-block;
       width: 5px;
@@ -929,7 +935,7 @@
             <div class="hud-titles">
               <div class="hud-class-label">Architect</div>
               <div class="hud-username"><span id="hud-username-txt">samconnerone</span></div>
-              <div class="hud-team-badge" id="hud-team-badge">Echo | Circle</div>
+              <div class="hud-team-badge" id="hud-team-badge"></div>
             </div>
           </div>
 
