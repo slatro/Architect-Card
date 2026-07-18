@@ -1,4 +1,19 @@
-.env
+# Keep only Architect Card files
+assets/
+contracts/
+css/
+js/
+scratch/
 node_modules/
-package-lock.json
+evoguardian/
 .DS_Store
+favicon.png
+thumbnail.png
+vercel.json
+leaderboard.json
+package.json
+package-lock.json
+base-verify.html
+rustfall_woodcutter.user.js
+images/demon_avatar.jpg
+images/demon_avatar.png
